@@ -1,0 +1,42 @@
+server:
+  port: 8090
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: raineri
+
+  datasource:
+    url: jdbc:mariadb://${MYSQL_HOSTNAME}:${MYSQL_PORT}/video_store_exam?ssl-mode=REQUIRED
+    username: ${MYSQL_USERNAME}
+    #password: ${MYSQL_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      dialect: org.hibernate.dialect.MariaDBDialect
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        highlight_sql: true
+    show-sql: true
+    open-in-view: false
+
+
+spring-doc:
+  swagger-ui:
+    enabled: true
+    # hostname:port/swagger-ui.html => localhost:8080/swagger-ui.html
+    path: /swagger-ui.html
+
+
+  pattern:
+    console: "%d %-5level [%thread] %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    com.example.raineri: info
+    org.hibernate.orm.jdbc.bind: trace
+    org.springframework: info
