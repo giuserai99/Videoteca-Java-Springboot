@@ -9,7 +9,6 @@ import it.cgmconsulting.raineri.repository.FilmRepository;
 import it.cgmconsulting.raineri.repository.GenreRepository;
 import it.cgmconsulting.raineri.repository.LanguageRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -50,5 +49,6 @@ public class FilmService {
 
         return ResponseEntity.status(200).body(filmRepository.getFilmsByLanguage(languageId));
     }
+
 
 }

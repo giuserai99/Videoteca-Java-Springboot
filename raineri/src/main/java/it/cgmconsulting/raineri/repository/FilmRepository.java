@@ -1,6 +1,7 @@
 package it.cgmconsulting.raineri.repository;
 
 import it.cgmconsulting.raineri.entity.Film;
+import it.cgmconsulting.raineri.payload.response.FilmRentResponse;
 import it.cgmconsulting.raineri.payload.response.FilmResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

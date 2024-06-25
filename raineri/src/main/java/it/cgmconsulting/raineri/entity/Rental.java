@@ -14,6 +14,6 @@ public class Rental {
     @EqualsAndHashCode.Include
     private RentalId rentalId;
 
-    private LocalDateTime rentalReturn = null;
+    private LocalDateTime rentalReturn;
 
 }

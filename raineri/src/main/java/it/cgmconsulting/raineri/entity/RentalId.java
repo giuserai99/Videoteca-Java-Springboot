@@ -5,11 +5,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Embeddable
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @EqualsAndHashCode
-public class RentalId {
+public class RentalId implements Serializable {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "customer_id")
