@@ -5,6 +5,7 @@ import it.cgmconsulting.raineri.entity.RentalId;
 import it.cgmconsulting.raineri.payload.response.CustomerStoreResponse;
 import it.cgmconsulting.raineri.payload.response.FilmMaxRentResponse;
 import it.cgmconsulting.raineri.payload.response.FilmRentResponse;
+import it.cgmconsulting.raineri.payload.response.FilmRentableResponse;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -41,10 +42,24 @@ public interface RentalRepository extends JpaRepository<Rental, RentalId> {
             "WHERE r.rentalId.customerId.customerId = :customerId")
     List<FilmRentResponse> getFilmRent(long customerId);
 
-//    @Query(value = "SELECT new it.cgmconsulting.raineri.payload.response.FilmMaxRentResponse(" +
-//            "r.rentalId.inventoryId.filmId.filmId, " +
-//            "r.rentalId.inventoryId.filmId.title," +
-//            "(SELECT MAX(COUNT(r.rentalId.inventoryId.filmId)))) " +
-//            "FROM Rental r")
-//    List<FilmMaxRentResponse> getFilmMaxRent();
+    @Query(value = "SELECT new it.cgmconsulting.raineri.payload.response.FilmMaxRentResponse(" +
+            "r.rentalId.inventoryId.filmId.filmId, " +
+            "r.rentalId.inventoryId.filmId.title, " +
+            "COUNT(r.rentalId.inventoryId.filmId)) " +
+            "FROM Rental r " +
+            "GROUP BY r.rentalId.inventoryId.filmId")
+    List<FilmMaxRentResponse> getFilmMaxRent();
+
+    @Query(value = "SELECT new it.cgmconsulting.raineri.payload.response.FilmRentableResponse(" +
+            "r.rentalId.inventoryId.filmId.title, " +
+            "r.rentalId.inventoryId.storeId.storeName, " +
+            "COUNT(r.rentalId.inventoryId.inventoryId), " +
+            "COUNT(r.rentalId.inventoryId.filmId) - (" +
+            "SELECT COUNT(r2.rentalId.inventoryId.filmId) " +
+            "FROM Rental r2 " +
+            "WHERE r2.rentalId.inventoryId.filmId.title = :title AND r2.rentalReturn IS NULL)) "  +
+            "FROM Rental r " +
+            "WHERE r.rentalId.inventoryId.filmId.title = :title " +
+            "GROUP BY r.rentalId.inventoryId.storeId")
+    List<FilmRentableResponse> getRentableFilms(String title);
 }

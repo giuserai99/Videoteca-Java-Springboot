@@ -5,10 +5,8 @@ import it.cgmconsulting.raineri.exception.GenericException;
 import it.cgmconsulting.raineri.exception.ResourceNotFoundException;
 import it.cgmconsulting.raineri.payload.request.RentalIdRequest;
 import it.cgmconsulting.raineri.payload.response.CustomerStoreResponse;
-import it.cgmconsulting.raineri.repository.CustomerRepository;
-import it.cgmconsulting.raineri.repository.InventoryRepository;
-import it.cgmconsulting.raineri.repository.RentalRepository;
-import it.cgmconsulting.raineri.repository.StoreRepository;
+import it.cgmconsulting.raineri.payload.response.FilmMaxRentResponse;
+import it.cgmconsulting.raineri.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +14,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -93,9 +94,37 @@ public class RentalService {
         return ResponseEntity.ok().body(rentalRepository.getFilmRent(customerId));
     }
 
-//    //Punto 8.
-//    public ResponseEntity<?> getFilmMaxRent(){
-//        return ResponseEntity.ok().body(rentalRepository.getFilmMaxRent());
-//    }
+    //Punto 8.
+    public ResponseEntity<?> getFilmMaxRent(){
+        List<FilmMaxRentResponse> listaFilm = rentalRepository.getFilmMaxRent();
+
+        if(listaFilm.isEmpty())
+            return ResponseEntity.status(204).body("No content");
+
+        long max = listaFilm.get(0).getTotNoleggi();
+
+        for(FilmMaxRentResponse film : listaFilm){
+            if (film.getTotNoleggi() > max) {
+                max = film.getTotNoleggi();
+            }
+        }
+
+        List<FilmMaxRentResponse> filmMaxRent = new ArrayList<>();
+        for (FilmMaxRentResponse film : listaFilm) {
+            if (film.getTotNoleggi() == max) {
+                filmMaxRent.add(film);
+            }
+        }
+        return ResponseEntity.ok().body(filmMaxRent);
+    }
+
+
+    //Punto 10.
+    public ResponseEntity<?> getRentableFilms(String title){
+        if(!inventoryRepository.existsByFilmIdTitle(title))
+            throw new ResourceNotFoundException("Film", "title", title);
+
+        return ResponseEntity.ok().body(rentalRepository.getRentableFilms(title));
+    }
 
 }

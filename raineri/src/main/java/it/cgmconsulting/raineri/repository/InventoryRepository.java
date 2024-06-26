@@ -10,4 +10,6 @@ public interface InventoryRepository extends JpaRepository<Inventory, Long> {
     boolean existsByStoreIdStoreIdAndFilmIdFilmId(long storeId, long FilmId);
 
     Optional<Inventory> findByInventoryId(long inventoryId);
+
+    boolean existsByFilmIdTitle(String title);
 }

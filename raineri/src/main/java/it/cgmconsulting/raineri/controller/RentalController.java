@@ -4,10 +4,7 @@ import it.cgmconsulting.raineri.payload.request.RentalIdRequest;
 import it.cgmconsulting.raineri.service.RentalService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Future;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -52,10 +49,16 @@ public class RentalController {
         return rentalService.getFilmsByCustomer(customerId);
     }
 
-//    //Punto 8.
-//    @GetMapping("/find-film-with-max-number-of-rent")
-//    public ResponseEntity<?> getFilmMaxRent(){
-//        return rentalService.getFilmMaxRent();
-//    }
+    //Punto 8.
+    @GetMapping("/find-film-with-max-number-of-rent")
+    public ResponseEntity<?> getFilmMaxRent(){
+        return rentalService.getFilmMaxRent();
+    }
+
+    //Punto 10.
+    @GetMapping("/find-rentable-films")
+    public ResponseEntity<?> getRentableFilms(@RequestParam @NotBlank @Size(max = 20) String title){
+        return rentalService.getRentableFilms(title);
+    }
 
 }
