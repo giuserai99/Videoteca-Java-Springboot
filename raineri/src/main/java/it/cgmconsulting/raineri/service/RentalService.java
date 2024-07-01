@@ -124,7 +124,7 @@ public class RentalService {
         if(!inventoryRepository.existsByFilmIdTitle(title))
             throw new ResourceNotFoundException("Film", "title", title);
 
-        return ResponseEntity.ok().body(rentalRepository.getRentableFilms(title));
+        return ResponseEntity.ok().body(rentalRepository.getRentableFilms(title, LocalDateTime.now()));
     }
 
 }

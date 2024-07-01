@@ -22,4 +22,15 @@ public interface FilmRepository extends JpaRepository<Film, Long> {
             "WHERE languageId.languageId = :languageId")
     List<FilmResponse> getFilmsByLanguage(long languageId);
 
+
+    @Query(value = "SELECT new it.cgmconsulting.raineri.payload.response.FilmResponse(" +
+            "f.filmId, " +
+            "f.title, " +
+            "f.description, " +
+            "f.releaseYear, " +
+            "f.languageId.languageName" +
+            ") FROM Film f " +
+            "WHERE f.filmId = :filmId ")
+    FilmResponse getFilms(long filmId);
+
 }

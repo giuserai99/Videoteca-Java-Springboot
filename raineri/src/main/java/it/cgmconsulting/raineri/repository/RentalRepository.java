@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -53,13 +54,13 @@ public interface RentalRepository extends JpaRepository<Rental, RentalId> {
     @Query(value = "SELECT new it.cgmconsulting.raineri.payload.response.FilmRentableResponse(" +
             "r.rentalId.inventoryId.filmId.title, " +
             "r.rentalId.inventoryId.storeId.storeName, " +
-            "COUNT(r.rentalId.inventoryId.inventoryId), " +
-            "COUNT(r.rentalId.inventoryId.filmId) - (" +
-            "SELECT COUNT(r2.rentalId.inventoryId.filmId) " +
+            "COUNT(DISTINCT r.rentalId.inventoryId.inventoryId), " +
+            "COUNT(DISTINCT r.rentalId.inventoryId) - (" +
+            "SELECT COUNT(DISTINCT r2.rentalId.inventoryId.filmId) " +
             "FROM Rental r2 " +
-            "WHERE r2.rentalId.inventoryId.filmId.title = :title AND r2.rentalReturn IS NULL)) "  +
+            "WHERE r2.rentalId.inventoryId.filmId.title = :title AND r2.rentalReturn IS NULL OR r2.rentalReturn > :now)) "  +
             "FROM Rental r " +
             "WHERE r.rentalId.inventoryId.filmId.title = :title " +
             "GROUP BY r.rentalId.inventoryId.storeId")
-    List<FilmRentableResponse> getRentableFilms(String title);
+    List<FilmRentableResponse> getRentableFilms(String title, LocalDateTime now);
 }
